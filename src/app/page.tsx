@@ -323,9 +323,9 @@ export default function Home() {
             >
               <Dumbbell className="h-8 w-8 text-primary" />
             </motion.div>
-            <span className="text-xl font-bold bg-gradient-to-l from-primary to-primary/70 bg-clip-text text-transparent">
-              פיט פרו עילית
-            </span>
+                         <span className="text-xl font-bold bg-gradient-to-l from-primary to-primary/70 bg-clip-text text-transparent">
+               לויס פיטנס
+             </span>
           </motion.div>
           
           {/* Desktop Menu */}
@@ -600,141 +600,199 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-16 relative overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+             {/* About Section */}
+       <section id="about" className="py-12 relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+         <div className="container mx-auto px-4">
+           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Left side - Content */}
             <RevealText delay={0.4}>
-              <div className="space-y-8">
-                <motion.div
-                  className="inline-block"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-4 py-2">
-                    אודות פיט פרו עילית
-                  </Badge>
-                </motion.div>
-                <div className="space-y-8">
-                  <div>
-                    <h2 className="text-4xl md:text-6xl font-bold mb-6">
-                      קצת עליי
-                    </h2>
-                    <p className="text-xl text-muted-foreground leading-relaxed">
-                      מאמן כושר מוסמך מבוסס מדע, מתחרה נינג'ה ישראל, ובעל ערוץ הכושר הגדול בישראל
-                    </p>
-                  </div>
+                             <div className="space-y-6">
+                 <motion.div
+                   className="inline-block"
+                   whileHover={{ scale: 1.1, rotate: 5 }}
+                 >
+                   <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-4 py-2">
+                     אודות לויס פיטנס
+                   </Badge>
+                 </motion.div>
+                 <div className="space-y-6">
+                   <div>
+                     <motion.div
+                       className="inline-block mb-4"
+                       whileHover={{ scale: 1.05, rotate: 2 }}
+                     >
+                       <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 text-lg px-6 py-3">
+                         🏆 מאמן מוסמך
+                       </Badge>
+                     </motion.div>
+                     <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                       קצת עליי
+                     </h2>
+                     <p className="text-lg text-muted-foreground leading-relaxed">
+                       מאמן כושר מוסמך מבוסס מדע, מתחרה נינג'ה ישראל, ובעל ערוץ הכושר הגדול בישראל
+                     </p>
+                   </div>
 
 
 
-                  {/* Main Content */}
-                  <div className="space-y-6">
-                    <div className="bg-muted/30 rounded-xl p-6">
-                      <h3 className="text-2xl font-bold text-primary mb-4 flex items-center gap-3">
-                        <span className="text-3xl">🎯</span>
-                        הפילוסופיה שלי
-                      </h3>
-                      <p className="text-lg leading-relaxed text-muted-foreground">
-                        כנות היא הערך החשוב ביותר עבורי. אני לא מוכר קיצורי דרך או תוספים לא מבוססים. 
-                        אני מאמין בעבודה קשה וחכמה, אבל מהנה ומקצועית.
-                      </p>
-                    </div>
+                                     {/* Main Content */}
+                   <div className="space-y-4">
+                     <motion.div 
+                       className="bg-gradient-to-r from-white/80 to-blue-50/80 backdrop-blur-sm rounded-xl p-4 border border-blue-200/50 shadow-lg"
+                       whileHover={{ scale: 1.02, y: -5 }}
+                       transition={{ type: "spring", stiffness: 300 }}
+                     >
+                       <h3 className="text-xl font-bold text-primary mb-3 flex items-center gap-3">
+                         <motion.span 
+                           className="text-2xl"
+                           animate={{ rotate: [0, 10, -10, 0] }}
+                           transition={{ duration: 2, repeat: Infinity, delay: 0 }}
+                         >
+                           🎯
+                         </motion.span>
+                         הפילוסופיה שלי
+                       </h3>
+                       <p className="text-base leading-relaxed text-muted-foreground">
+                         כנות היא הערך החשוב ביותר עבורי. אני לא מוכר קיצורי דרך או תוספים לא מבוססים. 
+                         אני מאמין בעבודה קשה וחכמה, אבל מהנה ומקצועית.
+                       </p>
+                     </motion.div>
 
-                    <div className="bg-muted/30 rounded-xl p-6">
-                      <h3 className="text-2xl font-bold text-primary mb-4 flex items-center gap-3">
-                        <span className="text-3xl">🧠</span>
-                        הגישה המדעית
-                      </h3>
-                      <p className="text-lg leading-relaxed text-muted-foreground">
-                        אני לא רק מלמד איך לעשות, אלא גם למה. כל תוכנית מבוססת על מחקרים מדעיים עדכניים 
-                        ומתמקדת בהבנה עמוקה של האנטומיה והפיזיולוגיה.
-                      </p>
-                    </div>
+                     <motion.div 
+                       className="bg-gradient-to-r from-white/80 to-purple-50/80 backdrop-blur-sm rounded-xl p-4 border border-purple-200/50 shadow-lg"
+                       whileHover={{ scale: 1.02, y: -5 }}
+                       transition={{ type: "spring", stiffness: 300 }}
+                     >
+                       <h3 className="text-xl font-bold text-primary mb-3 flex items-center gap-3">
+                         <motion.span 
+                           className="text-2xl"
+                           animate={{ rotate: [0, 10, -10, 0] }}
+                           transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                         >
+                           🧠
+                         </motion.span>
+                         הגישה המדעית
+                       </h3>
+                       <p className="text-base leading-relaxed text-muted-foreground">
+                         אני לא רק מלמד איך לעשות, אלא גם למה. כל תוכנית מבוססת על מחקרים מדעיים עדכניים 
+                         ומתמקדת בהבנה עמוקה של האנטומיה והפיזיולוגיה.
+                       </p>
+                     </motion.div>
 
-                    <div className="bg-muted/30 rounded-xl p-6">
-                      <h3 className="text-2xl font-bold text-primary mb-4 flex items-center gap-3">
-                        <span className="text-3xl">💪</span>
-                        הסיפור שלי
-                      </h3>
-                      <p className="text-lg leading-relaxed text-muted-foreground">
-                        כשהתחלתי, הייתי מתוסכל מחוסר הידע. אף אחד לא הסביר לי על איזה שרירים אני עובד, 
-                        כמה חזרות לעשות, או למה זה חשוב. היום אני נותן לכם את כל המידע הזה.
-                      </p>
-                    </div>
+                     <motion.div 
+                       className="bg-gradient-to-r from-white/80 to-green-50/80 backdrop-blur-sm rounded-xl p-4 border border-green-200/50 shadow-lg"
+                       whileHover={{ scale: 1.02, y: -5 }}
+                       transition={{ type: "spring", stiffness: 300 }}
+                     >
+                       <h3 className="text-xl font-bold text-primary mb-3 flex items-center gap-3">
+                         <motion.span 
+                           className="text-2xl"
+                           animate={{ rotate: [0, 10, -10, 0] }}
+                           transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                         >
+                           💪
+                         </motion.span>
+                         הסיפור שלי
+                       </h3>
+                       <p className="text-base leading-relaxed text-muted-foreground">
+                         כשהתחלתי, הייתי מתוסכל מחוסר הידע. אף אחד לא הסביר לי על איזה שרירים אני עובד, 
+                         כמה חזרות לעשות, או למה זה חשוב. היום אני נותן לכם את כל המידע הזה.
+                       </p>
+                     </motion.div>
 
-                    <div className="bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl p-6 border border-primary/20">
-                      <h3 className="text-2xl font-bold text-primary mb-4 flex items-center gap-3">
-                        <span className="text-3xl">🚀</span>
-                        ההזדמנות שלך
-                      </h3>
-                      <p className="text-lg leading-relaxed text-muted-foreground mb-4">
-                        אין יום שאני לא לומד אנטומיה וקורא מחקרים. היום הכל מסוכם וזמין עבורכם.
-                      </p>
-                      <p className="text-lg font-semibold text-primary">
-                        אתם בידיים הטובות ביותר. הגיע הזמן להיות הגוגל של עצמכם!
-                      </p>
-                    </div>
-                  </div>
+                     <motion.div 
+                       className="bg-gradient-to-r from-yellow-50/80 to-orange-50/80 backdrop-blur-sm rounded-xl p-4 border border-orange-200/50 shadow-lg"
+                       whileHover={{ scale: 1.02, y: -5 }}
+                       transition={{ type: "spring", stiffness: 300 }}
+                     >
+                       <h3 className="text-xl font-bold text-primary mb-3 flex items-center gap-3">
+                         <motion.span 
+                           className="text-2xl"
+                           animate={{ rotate: [0, 10, -10, 0] }}
+                           transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
+                         >
+                           🚀
+                         </motion.span>
+                         ההזדמנות שלך
+                       </h3>
+                       <p className="text-base leading-relaxed text-muted-foreground mb-3">
+                         אין יום שאני לא לומד אנטומיה וקורא מחקרים. היום הכל מסוכם וזמין עבורכם.
+                       </p>
+                       <p className="text-base font-semibold text-primary">
+                         אתם בידיים הטובות ביותר. הגיע הזמן להיות הגוגל של עצמכם!
+                       </p>
+                     </motion.div>
+                   </div>
                 </div>
               </div>
             </RevealText>
 
-            {/* Right side - Image */}
-            <RevealText delay={0.2}>
-              <div className="flex justify-center lg:justify-end">
-                <motion.div
-                  className="relative"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 p-8 flex items-center justify-center overflow-hidden">
-                    <div className="relative w-full h-full rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
-                      <ImageWithFallback
-                        src="/images/oren-levy.png"
-                        alt="Oren Levy - Personal Trainer"
-                        className="w-full h-full object-cover rounded-xl"
-                        style={{
-                          backgroundImage: "linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.05))"
-                        }}
-                      />
+                         {/* Right side - Image */}
+             <RevealText delay={0.2}>
+               <div className="flex justify-center lg:justify-end">
+                 <motion.div
+                   className="relative"
+                   whileHover={{ scale: 1.02 }}
+                 >
+                                                                               <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 p-8 flex items-center justify-center overflow-hidden">
+                      <div className="relative pt-200 w-full h-full rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
+                        <ImageWithFallback
+                          src="/images/oren-levy.png"
+                          alt="Oren Levy - Personal Trainer"
+                          className="w-full h-full object-cover rounded-xl"
+                          style={{
+                            backgroundImage: "linear-gradient(45deg, rgba(0,0,0,0.1), rgba(0,0,0,0.05))"
+                          }}
+                        />
+                        
+                        {/* Professional overlay with name */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-6 rounded-b-xl">
+                          <div className="text-white text-center">
+                            <h4 className="text-xl font-bold mb-1">אורן לוי</h4>
+                            <p className="text-white/90 text-sm">מאמן כושר מקצועי</p>
+                          </div>
+                        </div>
+                        
+                        {/* Certified badge */}
+                        <div className="absolute top-4 right-4">
+                          <Badge className="bg-green-500 text-white border-0 text-xs px-3 py-1">
+                            מוסמך
+                          </Badge>
+                        </div>
+                      </div>
                       
-                      {/* Professional overlay with name */}
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6">
-                        <h3 className="text-white text-2xl font-bold mb-1">אורן לוי</h3>
-                        <p className="text-white/90 text-sm">מאמן אישי מקצועי</p>
-                      </div>
+                      {/* Floating elements */}
+                      <motion.div
+                        className="absolute -top-4 -right-4 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center"
+                        animate={{ 
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 180, 360]
+                        }}
+                        transition={{ 
+                          duration: 3, 
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        <span className="text-sm">🏆</span>
+                      </motion.div>
+                      
+                      <motion.div
+                        className="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center"
+                        animate={{ 
+                          y: [-5, 5, -5],
+                          rotate: [0, 360]
+                        }}
+                        transition={{ 
+                          duration: 4, 
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 1
+                        }}
+                      >
+                        <span className="text-xs">💪</span>
+                      </motion.div>
                     </div>
-                    
-                    {/* Certification badge */}
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
-                      <div className="flex items-center gap-2">
-                        <Award className="h-4 w-4 text-primary" />
-                        <span className="text-xs font-medium text-primary">מוסמך</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Floating elements */}
-                  {[...Array(3)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-4 h-4 bg-primary/30 rounded-full"
-                      style={{
-                        top: `${20 + i * 20}%`,
-                        right: `${10 + i * 15}%`,
-                      }}
-                      animate={{
-                        y: [-10, 10, -10],
-                        x: [-5, 5, -5],
-                        opacity: [0.3, 0.7, 0.3],
-                      }}
-                      transition={{
-                        duration: 2 + i,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: i * 0.5,
-                      }}
-                    />
-                  ))}
                 </motion.div>
               </div>
             </RevealText>
@@ -768,32 +826,57 @@ export default function Home() {
           
           <StaggerContainer staggerDelay={0.15}>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: Target,
-                  title: "אימון אישי עילית 1:1",
-                  description: "אימונים אישיים עם ניתוח ביו-מכני מתקדם ותיקון תנוחה בזמן אמת.",
-                  price: "₪450/אימון",
-                  features: ["ניתוח תנועה", "תזונה מותאמת", "תמיכה 24/7"],
-                  gradient: "from-blue-500 to-purple-600"
-                },
-                {
-                  icon: Users,
-                  title: "דינמיקת קבוצות קטנות",
-                  description: "אימוני קבוצה אנרגטיים עם מקסימום 4 אנשים לתשומת לב ומוטיבציה מיטבית.",
-                  price: "₪170/אימון",
-                  features: ["מוטיבציה קבוצתית", "יתרון תחרותי", "תמיכה חברתית"],
-                  gradient: "from-green-500 to-teal-600"
-                },
-                {
-                  icon: Dumbbell,
-                  title: "כוח ועצמה",
-                  description: "אימוני כוח מתקדמים והרמת משקולות עם תכנות ברמת תחרויות.",
-                  price: "₪380/אימון",
-                  features: ["הרמות אולימפיות", "כוח מתקדם", "ביצועים אתלטיים"],
-                  gradient: "from-red-500 to-orange-600"
-                }
-              ].map((service, index) => (
+                             {[
+                 {
+                   icon: Target,
+                   title: "אימון אישי פרמיום",
+                   description: "אימון אישי אחד על אחד עם תשומת לב מלאה וניתוח ביו-מכני מתקדם.",
+                   price: "₪450",
+                   pricePer: "למפגש",
+                   features: [
+                     "ניתוח תנועה מתקדם",
+                     "תיקון תנוחה בזמן אמת", 
+                     "תזונה מותאמת אישית",
+                     "תמיכה 24/7 בווטסאפ",
+                     "מדידות שבועיות",
+                     "תוכנית אימון מותאמת"
+                   ],
+                   gradient: "from-blue-500 to-purple-600",
+                   popular: true
+                 },
+                 {
+                   icon: Users,
+                   title: "חבילת אימונים אישיים",
+                   description: "חבילה של 10 אימונים אישיים עם הנחה משמעותית ותוכנית אימון מקיפה.",
+                   price: "₪3,800",
+                   pricePer: "לחבילה",
+                   features: [
+                     "10 אימונים אישיים",
+                     "תוכנית אימון מקיפה",
+                     "תזונה מותאמת אישית",
+                     "תמיכה מלאה לאורך כל התהליך",
+                     "מדידות שבועיות",
+                     "הנחה של ₪700"
+                   ],
+                   gradient: "from-green-500 to-teal-600"
+                 },
+                 {
+                   icon: Dumbbell,
+                   title: "בניית תכנית אימון",
+                   description: "תכנית אימון מותאמת אישית לבנייה בבית או בחדר הכושר עם הדרכה מלאה.",
+                   price: "₪350",
+                   pricePer: "לתכנית",
+                   features: [
+                     "תכנית אימון מותאמת אישית",
+                     "הדרכה מפורטת לכל תרגיל",
+                     "תזונה מותאמת למטרות שלך",
+                     "תמיכה בווטסאפ למשך חודש",
+                     "עדכונים שבועיים לתכנית",
+                     "מדריך תזונה מפורט"
+                   ],
+                   gradient: "from-red-500 to-orange-600"
+                 }
+               ].map((service, index) => (
                 <StaggerItem key={index}>
                   <motion.div
                     whileHover={{ 
@@ -813,10 +896,17 @@ export default function Home() {
                           <service.icon className="h-8 w-8 text-white" />
                         </motion.div>
                         
-                        <h3 className="text-2xl mb-4 font-bold text-right transition-all duration-300 group-hover:text-primary/80">{service.title}</h3>
-                        <p className="text-muted-foreground mb-6 leading-relaxed text-right transition-all duration-300 group-hover:text-foreground/90">
-                          {service.description}
-                        </p>
+                                                 {service.popular && (
+                           <div className="mb-4">
+                             <Badge className="bg-yellow-400 text-yellow-900 border-0 text-xs px-3 py-1">
+                               ⭐ הכי פופולרי
+                             </Badge>
+                           </div>
+                         )}
+                         <h3 className="text-2xl mb-4 font-bold text-right transition-all duration-300 group-hover:text-primary/80">{service.title}</h3>
+                         <p className="text-muted-foreground mb-6 leading-relaxed text-right transition-all duration-300 group-hover:text-foreground/90">
+                           {service.description}
+                         </p>
                         
                         <div className="space-y-3 mb-6">
                           {service.features.map((feature, featureIndex) => (
@@ -834,20 +924,26 @@ export default function Home() {
                         </div>
                         
                         <div className="flex items-center justify-between">
-                          <motion.div
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <Button variant="ghost" size="sm" className="text-primary hover:bg-primary/10 transition-all duration-300 group-hover:text-primary/80 group-hover:bg-primary/5" suppressHydrationWarning>
-                              ← למד עוד
-                            </Button>
-                          </motion.div>
-                          <Badge 
-                            variant="outline" 
-                            className={`text-lg px-4 py-2 bg-gradient-to-l ${service.gradient} text-white border-0 transition-all duration-300 group-hover:scale-102 group-hover:shadow-md`}
-                          >
-                            {service.price}
-                          </Badge>
+                                                     <motion.div
+                             whileHover={{ scale: 1.1 }}
+                             whileTap={{ scale: 0.95 }}
+                           >
+                             <Button 
+                               className={`bg-gradient-to-r ${service.gradient} text-white border-0 hover:opacity-90 transition-all duration-300`} 
+                               size="sm" 
+                               suppressHydrationWarning
+                             >
+                               הזמן עכשיו
+                             </Button>
+                           </motion.div>
+                                                     <div className="text-right">
+                             <div className={`text-3xl font-bold bg-gradient-to-l ${service.gradient} bg-clip-text text-transparent`}>
+                               {service.price}
+                             </div>
+                             <div className="text-sm text-muted-foreground">
+                               {service.pricePer}
+                             </div>
+                           </div>
                         </div>
                       </CardContent>
                       
@@ -1203,7 +1299,7 @@ export default function Home() {
               className="flex items-center justify-center gap-3 mb-6"
               whileHover={{ scale: 1.05 }}
             >
-              <span className="text-2xl font-bold">פיט פרו עילית</span>
+              <span className="text-2xl font-bold">לויס פיטנס</span>
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
