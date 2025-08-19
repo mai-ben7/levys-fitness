@@ -710,10 +710,10 @@ export default function Home() {
                      </motion.div>
                    </div>
                 </div>
-              </div>
-            </RevealText>
+                </div>
+              </RevealText>
 
-                                                   {/* Right side - Image */}
+              {/* Right side - Image */}
               <RevealText delay={0.2}>
                 <div className="flex justify-center lg:justify-end self-end mt-16">
                   <motion.div
