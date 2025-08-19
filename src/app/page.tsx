@@ -335,11 +335,12 @@ export default function Home() {
               { name: 'שירותים', href: 'services' },
               { name: 'אודות', href: 'about' },
               { name: 'תוצאות', href: 'results' },
+              { name: 'מחשבון קלוריות', href: '/calorie-tracker' },
               { name: 'צור קשר', href: 'contact' }
             ].map((item, index) => (
               <motion.a
                 key={item.name}
-                href={`#${item.href}`}
+                href={item.href.startsWith('/') ? item.href : `#${item.href}`}
                 className="text-foreground hover:text-primary transition-colors relative group"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -390,11 +391,12 @@ export default function Home() {
               { name: 'שירותים', href: 'services' },
               { name: 'אודות', href: 'about' },
               { name: 'תוצאות', href: 'results' },
+              { name: 'מחשבון קלוריות', href: '/calorie-tracker' },
               { name: 'צור קשר', href: 'contact' }
             ].map((item, index) => (
               <motion.a
                 key={item.name}
-                href={`#${item.href}`}
+                href={item.href.startsWith('/') ? item.href : `#${item.href}`}
                 className="text-foreground hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
                 initial={{ opacity: 0, x: 20 }}
@@ -411,8 +413,8 @@ export default function Home() {
         </motion.div>
       </motion.nav>
 
-      {/* Hero Section with Advanced Parallax */}
-      <section ref={heroRef} id="home" className="relative min-h-screen flex items-end justify-center overflow-hidden pb-8">
+             {/* Hero Section with Advanced Parallax */}
+       <section ref={heroRef} id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Video Background */}
         <motion.div 
           className="absolute inset-0 z-0"
@@ -600,36 +602,20 @@ export default function Home() {
         </motion.div>
       </section>
 
-             {/* About Section */}
-       <section id="about" className="py-12 relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
-         <div className="container mx-auto px-4">
-           <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Left side - Content */}
-            <RevealText delay={0.4}>
-                             <div className="space-y-6">
-                 <motion.div
-                   className="inline-block"
-                   whileHover={{ scale: 1.1, rotate: 5 }}
-                 >
-                   <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-4 py-2">
-                     אודות לויס פיטנס
-                   </Badge>
-                 </motion.div>
-                 <div className="space-y-6">
-                   <div>
-                     <motion.div
-                       className="inline-block mb-4"
-                       whileHover={{ scale: 1.05, rotate: 2 }}
-                     >
-                       <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 text-lg px-6 py-3">
-                         🏆 מאמן מוסמך
-                       </Badge>
-                     </motion.div>
+                                    {/* About Section */}
+                   <section id="about" className="py-6 relative overflow-hidden bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 min-h-screen flex items-center">
+                 <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+                                                   {/* Left side - Content */}
+              <RevealText delay={0.4}>
+                               <div className="space-y-6 self-start">
+                  <div className="space-y-6">
+                    <div>
                      <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
                        קצת עליי
                      </h2>
                      <p className="text-lg text-muted-foreground leading-relaxed">
-                       מאמן כושר מוסמך מבוסס מדע, מתחרה נינג'ה ישראל, ובעל ערוץ הכושר הגדול בישראל
+                       מאמן כושר מוסמך מבוסס מדע, מתחרה נינג&apos;ה ישראל, ובעל ערוץ הכושר הגדול בישראל
                      </p>
                    </div>
 
@@ -727,15 +713,27 @@ export default function Home() {
               </div>
             </RevealText>
 
-                         {/* Right side - Image */}
-             <RevealText delay={0.2}>
-               <div className="flex justify-center lg:justify-end">
-                 <motion.div
-                   className="relative"
-                   whileHover={{ scale: 1.02 }}
-                 >
-                                                                               <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 p-8 flex items-center justify-center overflow-hidden">
-                      <div className="relative pt-200 w-full h-full rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
+                                                   {/* Right side - Image */}
+              <RevealText delay={0.2}>
+                <div className="flex justify-center lg:justify-end self-end mt-16">
+                  <motion.div
+                    className="relative w-full max-w-md"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    {/* Trainer certified badge above image */}
+                    <div className="mb-4 text-center">
+                      <motion.div
+                        className="inline-block"
+                        whileHover={{ scale: 1.05, rotate: 2 }}
+                      >
+                        <Badge className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 text-lg px-6 py-3">
+                          🏆 מאמן מוסמך
+                        </Badge>
+                      </motion.div>
+                    </div>
+                    
+                    <div className="h-full min-h-[600px] rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 p-8 flex items-center justify-center overflow-hidden">
+                      <div className="relative w-full h-full rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
                         <ImageWithFallback
                           src="/images/oren-levy.png"
                           alt="Oren Levy - Personal Trainer"
@@ -760,6 +758,7 @@ export default function Home() {
                           </Badge>
                         </div>
                       </div>
+                    </div>
                       
                       {/* Floating elements */}
                       <motion.div
@@ -792,40 +791,39 @@ export default function Home() {
                       >
                         <span className="text-xs">💪</span>
                       </motion.div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                  </div>
+                </RevealText>
               </div>
-            </RevealText>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* Services Section */}
-      <section ref={servicesRef} id="services" className="py-32 bg-gradient-to-b from-background to-muted/30 relative overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <RevealText delay={0.2}>
-            <div className="text-center mb-20">
-              <motion.div
-                className="inline-block mb-4"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-              >
-                <Badge className="bg-yellow-400/10 text-yellow-600 border-yellow-400/20 text-sm px-4 py-2">
-                  תוכניות אימונים מתקדמות
-                </Badge>
-              </motion.div>
-              <h2 className="text-4xl md:text-7xl mb-6 font-bold bg-gradient-to-l from-foreground to-foreground/70 bg-clip-text text-transparent">
-                שירותים מתמחים
-              </h2>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                פתרונות כושר מתקדמים המיועדים לפתוח את הפוטנציאל המלא שלך
-              </p>
             </div>
-          </RevealText>
+          </section>
+
+
+
+             {/* Services Section */}
+               <section ref={servicesRef} id="services" className="py-8 bg-gradient-to-b from-background to-muted/30 relative overflow-hidden min-h-screen flex items-center">
+        <div className="container mx-auto px-4 relative z-10">
+                     <RevealText delay={0.2}>
+             <div className="text-center mb-12">
+               <motion.div
+                 className="inline-block mb-4"
+                 whileHover={{ scale: 1.1, rotate: 5 }}
+               >
+                 <Badge className="bg-yellow-400/10 text-yellow-600 border-yellow-400/20 text-sm px-4 py-2">
+                   תוכניות אימונים מתקדמות
+                 </Badge>
+               </motion.div>
+               <h2 className="text-4xl md:text-7xl mb-6 font-bold bg-gradient-to-l from-foreground to-foreground/70 bg-clip-text text-transparent">
+                 שירותים מתמחים
+               </h2>
+               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                 פתרונות כושר מתקדמים המיועדים לפתוח את הפוטנציאל המלא שלך
+               </p>
+             </div>
+           </RevealText>
           
-          <StaggerContainer staggerDelay={0.15}>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                     <StaggerContainer staggerDelay={0.15}>
+             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
                              {[
                  {
                    icon: Target,
@@ -886,23 +884,22 @@ export default function Home() {
                     }}
                     className="group perspective-1000"
                   >
-                    <Card className="h-full border-0 shadow-2xl bg-gradient-to-br from-card to-card/80 backdrop-blur-sm overflow-hidden relative transition-all duration-300 hover:shadow-2xl">
-                      <CardContent className="p-8 relative z-10">
-                        <motion.div
-                          className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${service.gradient} mb-6 transition-all duration-300 group-hover:scale-105 group-hover:rotate-2`}
-                          whileHover={{ scale: 1.1, rotate: 10 }}
-                          transition={{ type: "spring", stiffness: 300 }}
-                        >
-                          <service.icon className="h-8 w-8 text-white" />
-                        </motion.div>
-                        
-                                                 {service.popular && (
-                           <div className="mb-4">
-                             <Badge className="bg-yellow-400 text-yellow-900 border-0 text-xs px-3 py-1">
-                               ⭐ הכי פופולרי
-                             </Badge>
-                           </div>
-                         )}
+                                         <Card className="h-full border-0 shadow-2xl bg-gradient-to-br from-card to-card/80 backdrop-blur-sm overflow-hidden relative transition-all duration-300 hover:shadow-2xl">
+                       {service.popular && (
+                         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-20">
+                           <Badge className="bg-yellow-400 text-yellow-900 border-0 text-xs px-3 py-1 shadow-lg">
+                             ⭐ הכי פופולרי
+                           </Badge>
+                         </div>
+                       )}
+                       <CardContent className="p-8 relative z-10">
+                         <motion.div
+                           className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${service.gradient} mb-6 transition-all duration-300 group-hover:scale-105 group-hover:rotate-2`}
+                           whileHover={{ scale: 1.1, rotate: 10 }}
+                           transition={{ type: "spring", stiffness: 300 }}
+                         >
+                           <service.icon className="h-8 w-8 text-white" />
+                         </motion.div>
                          <h3 className="text-2xl mb-4 font-bold text-right transition-all duration-300 group-hover:text-primary/80">{service.title}</h3>
                          <p className="text-muted-foreground mb-6 leading-relaxed text-right transition-all duration-300 group-hover:text-foreground/90">
                            {service.description}
@@ -975,31 +972,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Results Section */}
-      <section id="results" className="py-32 bg-gradient-to-b from-muted/30 to-background">
+             {/* Results Section */}
+               <section id="results" className="py-8 bg-gradient-to-b from-muted/30 to-background min-h-screen flex items-center">
         <div className="container mx-auto px-4">
-          <RevealText>
-            <div className="text-center mb-20">
-              <motion.div
-                className="inline-block mb-4"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-              >
-                <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-sm px-4 py-2">
-                  תוצאות אמיתיות
-                </Badge>
-              </motion.div>
-              <h2 className="text-4xl md:text-7xl mb-6 font-bold">
-                סיפורי הצלחה
-                <span className="block text-primary">שמשנים חיים</span>
-              </h2>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                גלה איך לקוחותינו השיגו את המטרות שלהם והשיגו את הגוף שתמיד רצו
-              </p>
-            </div>
-          </RevealText>
+                     <RevealText>
+             <div className="text-center mb-12">
+               <motion.div
+                 className="inline-block mb-4"
+                 whileHover={{ scale: 1.1, rotate: 5 }}
+               >
+                 <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-sm px-4 py-2">
+                   תוצאות אמיתיות
+                 </Badge>
+               </motion.div>
+               <h2 className="text-4xl md:text-7xl mb-6 font-bold">
+                 סיפורי הצלחה
+                 <span className="block text-primary">שמשנים חיים</span>
+               </h2>
+               <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                 גלה איך לקוחותינו השיגו את המטרות שלהם והשיגו את הגוף שתמיד רצו
+               </p>
+             </div>
+           </RevealText>
           
-          <StaggerContainer staggerDelay={0.2}>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                     <StaggerContainer staggerDelay={0.2}>
+             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
               {[
                 {
                   name: "דוד כהן",
@@ -1057,7 +1054,7 @@ export default function Home() {
                             {testimonial.result}
                           </Badge>
                           <p className="text-muted-foreground text-right leading-relaxed">
-                            "{testimonial.review}"
+                            &ldquo;{testimonial.review}&rdquo;
                           </p>
                         </div>
                         
@@ -1080,8 +1077,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-32 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+             {/* Contact Section */}
+               <section id="contact" className="py-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden min-h-screen flex items-center">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           {[
@@ -1142,7 +1139,7 @@ export default function Home() {
             <RevealText delay={0.2}>
               <div className="space-y-8 order-2 lg:order-1">
                 <h3 className="text-3xl font-bold text-right bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  קבל את מפגש האסטרטגיה החינמי שלך
+                  תעשה את הצעד הראשון לעבר המטרה
                 </h3>
                 
                 <div className="space-y-6">
@@ -1171,24 +1168,6 @@ export default function Home() {
                   ))}
                 </div>
 
-                <motion.div 
-                  className="bg-gradient-to-r from-yellow-400 to-orange-500 p-8 rounded-2xl border-0 shadow-2xl text-white"
-                  whileHover={{ scale: 1.02, rotateY: 5 }}
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-3xl">⚡</span>
-                    <h4 className="font-bold text-xl">הצעה מוגבלת בזמן</h4>
-                  </div>
-                  <p className="text-white/95 text-right leading-relaxed">
-                    הזמן את הייעוץ החינמי שלך החודש וקבל מדריך תזונה חינמי 
-                    בשווי ₪365.
-                  </p>
-                  <div className="mt-4 text-center">
-                    <Badge className="bg-white/20 text-white border-white/30 px-4 py-2">
-                      🎁 מתנה חינמית
-                    </Badge>
-                  </div>
-                </motion.div>
               </div>
             </RevealText>
             
@@ -1209,7 +1188,7 @@ export default function Home() {
                         <span className="text-2xl text-white">📝</span>
                       </motion.div>
                       <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        הזמן את המפגש החינמי שלך
+                        דבר איתי כאן
                       </h3>
                     </div>
                     <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
@@ -1258,7 +1237,7 @@ export default function Home() {
                         </motion.div>
                       </div>
                       <div>
-                        <label className="block mb-2 font-semibold text-right text-gray-700">המטרות שלך בכושר</label>
+                        <label className="block mb-2 font-semibold text-right text-gray-700">המטרות שלך בכושר / שאלות שיש לך</label>
                         <motion.div whileFocus={{ scale: 1.02 }}>
                           <Textarea 
                             placeholder="ספר לי על המטרות שלך בכושר ומה שברצונך להשיג..."
@@ -1278,7 +1257,7 @@ export default function Home() {
                           suppressHydrationWarning
                         >
                           <span className="mr-2">🚀</span>
-                          הזמן את המפגש החינמי שלי
+                          קבע כאן
                           <span className="ml-2">⚡</span>
                         </Button>
                       </motion.div>
@@ -1291,8 +1270,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 bg-primary text-primary-foreground">
+             {/* Footer */}
+       <footer className="py-8 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <motion.div 
@@ -1311,7 +1290,7 @@ export default function Home() {
               שנה את הגוף שלך. שנה את החיים שלך. שנה את העתיד שלך.
             </p>
             <p className="text-primary-foreground/60 text-sm">
-              © 2025 פיט פרו עילית. כל הזכויות שמורות.
+              © 2025 Mai Web | כל הזכויות שמורות
             </p>
           </div>
         </div>
