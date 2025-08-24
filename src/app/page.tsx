@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import Image from 'next/image'; // Added Image import
+import BookingSection from "@/components/BookingSection";
 
 // Advanced text reveal component
 const RevealText = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
@@ -1135,138 +1136,9 @@ export default function Home() {
             </div>
           </RevealText>
           
-          <div className="grid lg:grid-cols-2 gap-16">
-            <RevealText delay={0.2}>
-              <div className="space-y-8 order-2 lg:order-1">
-                <h3 className="text-3xl font-bold text-right bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  תעשה את הצעד הראשון לעבר המטרה
-                </h3>
-                
-                <div className="space-y-6">
-                  {[
-                    { icon: "🎯", title: "הערכת יעדים", desc: "הגדרת המטרות הכושר שלך ויצירת מפת דרכים", color: "from-blue-500 to-blue-600" },
-                    { icon: "📊", title: "ניתוח הרכב גוף", desc: "הערכת בריאות וכושר מלאה", color: "from-purple-500 to-purple-600" },
-                    { icon: "🏋️", title: "תצוגה מקדימה של תוכנית מותאמת", desc: "ראה בדיוק איך נשיג את המטרות שלך", color: "from-pink-500 to-pink-600" },
-                    { icon: "💡", title: "הדרכת תזונה", desc: "מפגש אסטרטגיית תזונה אישית", color: "from-orange-500 to-orange-600" }
-                  ].map((benefit, index) => (
-                    <motion.div
-                      key={index}
-                      className={`flex items-start gap-4 p-6 rounded-2xl bg-gradient-to-r ${benefit.color} text-white shadow-lg border-0`}
-                      initial={{ opacity: 0, x: 50 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      whileHover={{ scale: 1.05, x: -10, rotateY: 5 }}
-                    >
-                      <div className="flex-1">
-                        <h4 className="font-bold mb-2 text-right text-lg">{benefit.title}</h4>
-                        <p className="text-white/90 text-sm text-right leading-relaxed">{benefit.desc}</p>
-                      </div>
-                      <div className="text-3xl bg-white/20 rounded-full p-3 backdrop-blur-sm">
-                        {benefit.icon}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-              </div>
-            </RevealText>
-            
-            <RevealText delay={0.4}>
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-                className="order-1 lg:order-2"
-              >
-                <Card className="shadow-2xl border-0 bg-gradient-to-br from-white via-blue-50 to-purple-50 backdrop-blur-sm">
-                  <CardContent className="p-8">
-                    <div className="text-center mb-8">
-                      <motion.div
-                        className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4"
-                        whileHover={{ scale: 1.1, rotate: 360 }}
-                        transition={{ duration: 0.5 }}
-                      >
-                        <span className="text-2xl text-white">📝</span>
-                      </motion.div>
-                      <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        דבר איתי כאן
-                      </h3>
-                    </div>
-                    <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block mb-2 font-semibold text-right text-gray-700">שם פרטי</label>
-                          <motion.div whileFocus={{ scale: 1.02 }}>
-                            <Input 
-                              placeholder="יוחנן" 
-                              className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-right bg-white/80 backdrop-blur-sm" 
-                              suppressHydrationWarning 
-                            />
-                          </motion.div>
-                        </div>
-                        <div>
-                          <label className="block mb-2 font-semibold text-right text-gray-700">שם משפחה</label>
-                          <motion.div whileFocus={{ scale: 1.02 }}>
-                            <Input 
-                              placeholder="כהן" 
-                              className="border-2 border-gray-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 text-right bg-white/80 backdrop-blur-sm" 
-                              suppressHydrationWarning 
-                            />
-                          </motion.div>
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block mb-2 font-semibold text-right text-gray-700">אימייל</label>
-                        <motion.div whileFocus={{ scale: 1.02 }}>
-                          <Input 
-                            type="email" 
-                            placeholder="yohanan@example.com" 
-                            className="border-2 border-gray-200 focus:border-pink-500 focus:ring-2 focus:ring-pink-200 text-right bg-white/80 backdrop-blur-sm" 
-                            suppressHydrationWarning 
-                          />
-                        </motion.div>
-                      </div>
-                      <div>
-                        <label className="block mb-2 font-semibold text-right text-gray-700">טלפון</label>
-                        <motion.div whileFocus={{ scale: 1.02 }}>
-                          <Input 
-                            type="tel" 
-                            placeholder="050-123-4567" 
-                            className="border-2 border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 text-right bg-white/80 backdrop-blur-sm" 
-                            suppressHydrationWarning 
-                          />
-                        </motion.div>
-                      </div>
-                      <div>
-                        <label className="block mb-2 font-semibold text-right text-gray-700">המטרות שלך בכושר / שאלות שיש לך</label>
-                        <motion.div whileFocus={{ scale: 1.02 }}>
-                          <Textarea 
-                            placeholder="ספר לי על המטרות שלך בכושר ומה שברצונך להשיג..."
-                            rows={4}
-                            className="border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-right bg-white/80 backdrop-blur-sm"
-                            suppressHydrationWarning
-                          />
-                        </motion.div>
-                      </div>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Button 
-                          type="submit" 
-                          className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-lg py-6 rounded-2xl shadow-2xl border-0 font-bold" 
-                          suppressHydrationWarning
-                        >
-                          <span className="mr-2">🚀</span>
-                          קבע כאן
-                          <span className="ml-2">⚡</span>
-                        </Button>
-                      </motion.div>
-                    </form>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </RevealText>
-          </div>
+          <RevealText delay={0.4}>
+            <BookingSection />
+          </RevealText>
         </div>
       </section>
 

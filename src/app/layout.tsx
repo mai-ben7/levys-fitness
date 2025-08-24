@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   creator: "Levy's Fitness",
   publisher: "Levy's Fitness",
   icons: {
-    icon: "/images/Logo.webp",
-    shortcut: "/images/Logo.webp",
-    apple: "/images/Logo.webp",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/images/Logo.png",
   },
   formatDetection: {
     email: false,
@@ -83,9 +83,9 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl" className={`${inter.variable} ${geistMono.variable}`}>
       <head>
-        <link rel="icon" href="/images/Logo.webp" type="image/webp" />
-        <link rel="shortcut icon" href="/images/Logo.webp" type="image/webp" />
-        <link rel="apple-touch-icon" href="/images/Logo.webp" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/images/Logo.png" />
         <HydrationScript />
       </head>
       <body className="antialiased">
