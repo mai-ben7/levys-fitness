@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
@@ -142,7 +142,6 @@ export default function CalorieTracker() {
   const [dailyNotes, setDailyNotes] = useState('');
   const [isHydrated, setIsHydrated] = useState(false);
 
-
   // Load state on mount
   useEffect(() => {
     const savedState = loadState();
@@ -150,27 +149,41 @@ export default function CalorieTracker() {
     setIsHydrated(true);
   }, []);
 
-  // Save state whenever it changes
+  // Debounced save state to localStorage
   useEffect(() => {
-    if (isHydrated) {
+    if (!isHydrated) return;
+    
+    const timeoutId = setTimeout(() => {
       saveState(state);
-    }
+    }, 500); // Debounce for 500ms
+
+    return () => clearTimeout(timeoutId);
   }, [state, isHydrated]);
 
-  // Get current day's data
-  const currentGoals = state.goalsByDate[selectedDate] || state.goalsByDate.default || {
-    calories: 2000,
-    protein: 150,
-    carbs: 200,
-    fat: 65,
-  };
-  const currentEntries = state.entriesByDate[selectedDate] || [];
+  // Memoized calculations to prevent unnecessary re-computations
+  const currentGoals = useMemo(() => 
+    state.goalsByDate[selectedDate] || state.goalsByDate.default || {
+      calories: 2000,
+      protein: 150,
+      carbs: 200,
+      fat: 65,
+    }, [state.goalsByDate, selectedDate]
+  );
 
-  const weekData = getWeekData(state, selectedDate);
-  const streakCount = getStreakCount(state, selectedDate);
+  const currentEntries = useMemo(() => 
+    state.entriesByDate[selectedDate] || [], [state.entriesByDate, selectedDate]
+  );
 
-  // Handlers
-  const handleAddEntry = (entry: FoodEntry) => {
+  const weekData = useMemo(() => 
+    getWeekData(state, selectedDate), [state, selectedDate]
+  );
+
+  const streakCount = useMemo(() => 
+    getStreakCount(state, selectedDate), [state, selectedDate]
+  );
+
+  // Memoized handlers to prevent unnecessary re-renders
+  const handleAddEntry = useCallback((entry: FoodEntry) => {
     const newState = {
       ...state,
       entriesByDate: {
@@ -179,10 +192,9 @@ export default function CalorieTracker() {
       },
     };
     setState(newState);
-    saveState(newState);
-  };
+  }, [state, selectedDate, currentEntries]);
 
-  const handleEditEntry = (id: string, updatedEntry: FoodEntry) => {
+  const handleEditEntry = useCallback((id: string, updatedEntry: FoodEntry) => {
     const newEntries = currentEntries.map(entry =>
       entry.id === id ? updatedEntry : entry
     );
@@ -194,10 +206,9 @@ export default function CalorieTracker() {
       },
     };
     setState(newState);
-    saveState(newState);
-  };
+  }, [state, selectedDate, currentEntries]);
 
-  const handleDeleteEntry = (id: string) => {
+  const handleDeleteEntry = useCallback((id: string) => {
     const newEntries = currentEntries.filter(entry => entry.id !== id);
     const newState = {
       ...state,
@@ -207,12 +218,9 @@ export default function CalorieTracker() {
       },
     };
     setState(newState);
-    saveState(newState);
-  };
+  }, [state, selectedDate, currentEntries]);
 
-
-
-  const handleUpdateGoals = (goals: DailyGoals) => {
+  const handleUpdateGoals = useCallback((goals: DailyGoals) => {
     const newState = {
       ...state,
       goalsByDate: {
@@ -221,28 +229,27 @@ export default function CalorieTracker() {
       },
     };
     setState(newState);
-    saveState(newState);
-  };
+  }, [state, selectedDate]);
 
-  const handleUpdateDailyNotes = (notes: string) => {
+  const handleUpdateDailyNotes = useCallback((notes: string) => {
     setDailyNotes(notes);
-  };
+  }, []);
 
-  const handlePrevDay = () => {
+  const handlePrevDay = useCallback(() => {
     const prevDate = new Date(selectedDate);
     prevDate.setDate(prevDate.getDate() - 1);
     setSelectedDate(toLocalYMD(prevDate));
-  };
+  }, [selectedDate]);
 
-  const handleNextDay = () => {
+  const handleNextDay = useCallback(() => {
     const nextDate = new Date(selectedDate);
     nextDate.setDate(nextDate.getDate() + 1);
     setSelectedDate(toLocalYMD(nextDate));
-  };
+  }, [selectedDate]);
 
-  const handleToday = () => {
+  const handleToday = useCallback(() => {
     setSelectedDate(toLocalYMD(new Date()));
-  };
+  }, []);
 
   if (!isHydrated) {
     return (
@@ -360,7 +367,6 @@ export default function CalorieTracker() {
                       goalsByDate: newGoalsByDate,
                     };
                     setState(newState);
-                    saveState(newState);
                   }}
                 />
               </StaggerItem>
@@ -379,7 +385,6 @@ export default function CalorieTracker() {
                         presets: [...state.presets, preset],
                       };
                       setState(newState);
-                      saveState(newState);
                     }}
                     selectedDate={selectedDate}
                   />

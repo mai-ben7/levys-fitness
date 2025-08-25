@@ -15,8 +15,8 @@ export const loadState = (): TrackerState => {
 
     const data = JSON.parse(stored);
     return migrate(data);
-  } catch {
-    console.warn('Failed to parse stored state, using defaults');
+  } catch (error) {
+    console.warn('Failed to parse stored state, using defaults:', error);
     return getDefaultState();
   }
 };
@@ -26,10 +26,20 @@ export const saveState = (state: TrackerState): void => {
     return;
   }
 
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    console.warn('Failed to save state to localStorage');
+  // Use requestIdleCallback for non-blocking save operations
+  const saveToStorage = () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      console.warn('Failed to save state to localStorage:', error);
+    }
+  };
+
+  // Use requestIdleCallback if available, otherwise use setTimeout
+  if ('requestIdleCallback' in window) {
+    (window as any).requestIdleCallback(saveToStorage);
+  } else {
+    setTimeout(saveToStorage, 0);
   }
 };
 
@@ -98,13 +108,11 @@ export const importData = (file: File): Promise<{ data: TrackerState; isValid: b
         const parsed = JSON.parse(e.target?.result as string);
         
         // Basic validation
-        const isValid = parsed.version === 1 && 
-                       typeof parsed.goalsByDate === 'object' &&
-                       typeof parsed.entriesByDate === 'object' &&
-                       Array.isArray(parsed.presets);
-        
-        if (isValid) {
-          resolve({ data: migrate(parsed), isValid: true });
+        if (parsed && typeof parsed === 'object' && 
+            typeof parsed.goalsByDate === 'object' && 
+            typeof parsed.entriesByDate === 'object' && 
+            Array.isArray(parsed.presets)) {
+          resolve({ data: parsed as TrackerState, isValid: true });
         } else {
           resolve({ data: getDefaultState(), isValid: false });
         }
