@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, CheckCircle, ExternalLink, Download } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,8 @@ interface BookingSuccess {
   htmlLink?: string;
   meetLink?: string;
   eventId?: string;
+  slotStart?: string;
+  slotEnd?: string;
 }
 
 export default function BookNowCard() {
@@ -162,7 +164,11 @@ export default function BookNowCard() {
       const data = await response.json();
 
       if (response.ok) {
-        setBookingSuccess(data);
+        setBookingSuccess({
+          ...data,
+          slotStart: selectedSlot?.start,
+          slotEnd: selectedSlot?.end
+        });
         // Reset form
         setFormData({
           name: '',
@@ -198,57 +204,7 @@ export default function BookNowCard() {
 
 
 
-  const generateICS = async () => {
-    if (!selectedSlot || !bookingSuccess) return;
 
-    try {
-      const { createEvent } = await import('ics');
-      
-      const event = {
-        start: [
-          new Date(selectedSlot.start).getFullYear(),
-          new Date(selectedSlot.start).getMonth() + 1,
-          new Date(selectedSlot.start).getDate(),
-          new Date(selectedSlot.start).getHours(),
-          new Date(selectedSlot.start).getMinutes()
-        ] as [number, number, number, number, number],
-        end: [
-          new Date(selectedSlot.end).getFullYear(),
-          new Date(selectedSlot.end).getMonth() + 1,
-          new Date(selectedSlot.end).getDate(),
-          new Date(selectedSlot.end).getHours(),
-          new Date(selectedSlot.end).getMinutes()
-        ] as [number, number, number, number, number],
-        title: `${selectedService.label} - ${formData.name}`,
-        description: formData.note || '',
-        location: bookingSuccess.meetLink || '',
-        url: bookingSuccess.htmlLink || '',
-        status: 'CONFIRMED' as const,
-        busyStatus: 'BUSY' as const,
-        organizer: { name: 'Levy\'s Fitness', email: 'training.program.levys@gmail.com' },
-        attendees: [{ name: formData.name, email: formData.email }]
-      };
-
-      const { error, value } = createEvent(event);
-      
-      if (error) {
-        console.error('Error creating ICS file:', error);
-        return;
-      }
-
-      const blob = new Blob([value], { type: 'text/calendar' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `booking-${selectedSlot.start.split('T')[0]}.ics`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error generating ICS file:', error);
-    }
-  };
 
   if (bookingSuccess) {
     return (
@@ -273,52 +229,14 @@ export default function BookNowCard() {
               <div className="bg-white p-4 rounded-lg">
                 <p className="text-sm text-gray-600 mb-2">תאריך ושעה:</p>
                 <p className="font-semibold">
-                  {new Date(selectedSlot!.start).toLocaleDateString('he-IL')} - {new Date(selectedSlot!.start).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
+                  {bookingSuccess.slotStart && new Date(bookingSuccess.slotStart).toLocaleDateString('he-IL')} - {bookingSuccess.slotStart && new Date(bookingSuccess.slotStart).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
               
-              {bookingSuccess.htmlLink && (
-                <div className="bg-white p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-2">פתח/י ב-Google Calendar:</p>
-                  <a 
-                    href={bookingSuccess.htmlLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 font-semibold flex items-center justify-center gap-2"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    פתח ב-Google Calendar
-                  </a>
-                </div>
-              )}
 
-              {bookingSuccess.meetLink && (
-                <div className="bg-white p-4 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-2">קישור Google Meet:</p>
-                  <a 
-                    href={bookingSuccess.meetLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 font-semibold flex items-center justify-center gap-2"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    הצטרף לפגישה
-                  </a>
-                </div>
-              )}
             </div>
             
             <div className="space-y-2 mt-6">
-              <Button 
-                onClick={generateICS}
-                variant="outline"
-                className="w-full"
-                suppressHydrationWarning
-              >
-                <Download className="h-4 w-4 ml-2" />
-                הורד/י קובץ ליומן (ICS)
-              </Button>
-              
               <Button 
                 onClick={() => setBookingSuccess(null)}
                 className="w-full bg-green-600 hover:bg-green-700"
@@ -395,8 +313,7 @@ export default function BookNowCard() {
               {/* No slots available message */}
               {!loadingSlots && slots.length === 0 && (
                 <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 px-4 py-3 rounded-lg text-right text-sm">
-                  <p className="mb-2">אין זמנים זמינים לתאריך זה.</p>
-                  <p className="text-xs">צור אירועי "Availability" ביומן Google שלך או בדוק תאריך אחר.</p>
+                  <p>אין זמנים זמינים לתאריך זה.</p>
                 </div>
               )}
 

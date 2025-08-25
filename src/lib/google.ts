@@ -224,7 +224,7 @@ export async function getAvailableSlots(
   const calendarId = process.env.TRAINER_CALENDAR_ID || 'primary';
   const timeZone = 'Asia/Jerusalem';
   const durationMin = serviceConfig?.duration || 60;
-  const bufferMin = serviceConfig?.buffer || 10;
+  const bufferMin = serviceConfig?.buffer ?? 10; // Use nullish coalescing to allow 0
 
   console.log('[slots] Config - timeZone:', timeZone, 'durationMin:', durationMin, 'bufferMin:', bufferMin);
 
@@ -250,6 +250,9 @@ export async function getAvailableSlots(
 
     const allEvents = response.data.items || [];
     console.log('[slots] All events found:', allEvents.length);
+    allEvents.forEach((event, index) => {
+      console.log(`[slots] Event ${index + 1}: "${event.summary}" (${event.start?.dateTime || event.start?.date} - ${event.end?.dateTime || event.end?.date})`);
+    });
 
     // Get busy intervals from all events (except availability events)
     const busy: { start: Date; end: Date }[] = [];
@@ -257,15 +260,19 @@ export async function getAvailableSlots(
 
     for (const event of allEvents) {
       const title = (event.summary || '').toLowerCase();
-      const isAvailability = /availability|available|open|slot|זמינות|פתוח/.test(title);
+      const isAvailability = /availability|available|open|slot|זמינות|פתוח|free|פנוי/.test(title);
+      
+      console.log(`[slots] Event "${event.summary}" - isAvailability: ${isAvailability}`);
       
       if (isAvailability) {
         availabilityEvents.push(event);
+        console.log(`[slots] Added as availability event: ${event.summary}`);
       } else if (event.start?.dateTime && event.end?.dateTime) {
         // This is a busy event
         const start = new Date(event.start.dateTime);
         const end = new Date(event.end.dateTime);
         busy.push({ start, end });
+        console.log(`[slots] Added as busy event: ${event.summary} (${start.toLocaleTimeString('he-IL')} - ${end.toLocaleTimeString('he-IL')})`);
       }
     }
 
@@ -372,13 +379,20 @@ export async function getAvailableSlots(
       // Start generating slots from the earliest time
       let currentTime = new Date(earliestStart);
       
-      // Align to duration boundaries
-      const minutes = currentTime.getMinutes();
-      const mod = minutes % durationMin;
-      if (mod !== 0) {
-        currentTime.setMinutes(minutes + (durationMin - mod), 0, 0);
+      // For availability windows that are exactly the duration size, start from the window start
+      const windowDuration = (window.end.getTime() - window.start.getTime()) / (1000 * 60);
+      if (windowDuration === durationMin) {
+        // If window is exactly the session duration, use the window start time
+        currentTime = new Date(window.start);
       } else {
-        currentTime.setSeconds(0, 0);
+        // Otherwise, align to duration boundaries
+        const minutes = currentTime.getMinutes();
+        const mod = minutes % durationMin;
+        if (mod !== 0) {
+          currentTime.setMinutes(minutes + (durationMin - mod), 0, 0);
+        } else {
+          currentTime.setSeconds(0, 0);
+        }
       }
 
       console.log(`[slots] Starting from: ${currentTime.toLocaleTimeString('he-IL')}`);
@@ -394,11 +408,14 @@ export async function getAvailableSlots(
           break;
         }
 
-        // Check if this slot overlaps with busy times
-        const slotStartWithBuffer = new Date(slotStart.getTime() - bufferMin * 60 * 1000);
-        const slotEndWithBuffer = new Date(slotEnd.getTime() + bufferMin * 60 * 1000);
-        
-        if (!overlapsBusy(slotStartWithBuffer, slotEndWithBuffer)) {
+                 // Check if this slot overlaps with busy times
+         const slotStartWithBuffer = new Date(slotStart.getTime() - bufferMin * 60 * 1000);
+         const slotEndWithBuffer = new Date(slotEnd.getTime() + bufferMin * 60 * 1000);
+         
+         console.log(`[slots] Checking slot: ${slotStart.toLocaleTimeString('he-IL')} - ${slotEnd.toLocaleTimeString('he-IL')}`);
+         console.log(`[slots] With buffer (${bufferMin}min): ${slotStartWithBuffer.toLocaleTimeString('he-IL')} - ${slotEndWithBuffer.toLocaleTimeString('he-IL')}`);
+         
+         if (!overlapsBusy(slotStartWithBuffer, slotEndWithBuffer)) {
           slots.push({
             start: formatRFC3339WithOffset(slotStart),
             end: formatRFC3339WithOffset(slotEnd)
@@ -461,8 +478,8 @@ export async function createBooking(
     // Create Google Meet link
     const meetLink = `https://meet.google.com/${generateMeetCode()}`;
 
-            const event = {
-          summary: `${clientName} - ${serviceConfig?.label || 'אימון אישי'}`,
+                                  const event = {
+        summary: `${serviceConfig?.label || 'אימון אישי'} - ${clientName}`,
           description: `
             לקוח: ${clientName}
             אימייל: ${clientEmail}
@@ -505,16 +522,41 @@ export async function createBooking(
       calendarId: calendarId,
       requestBody: event,
       conferenceDataVersion: 1,
-      sendUpdates: 'all'
+      sendUpdates: 'none'
     });
 
-            return {
-          eventId: response.data.id,
-          htmlLink: response.data.htmlLink,
-          meetLink: response.data.conferenceData?.entryPoints?.[0]?.uri || meetLink,
-          startTime: response.data.start?.dateTime,
-          endTime: response.data.end?.dateTime
-        };
+    const finalMeetLink = response.data.conferenceData?.entryPoints?.[0]?.uri || meetLink;
+
+    // Send notification email to trainer
+    await sendBookingNotificationToTrainer(
+      email,
+      clientName,
+      clientEmail,
+      clientPhone,
+      serviceConfig?.label || 'אימון אישי',
+      startTime.toISOString(),
+      endTime.toISOString(),
+      notes,
+      finalMeetLink
+    );
+
+    // Send confirmation email to client
+    await sendBookingConfirmationToClient(
+      clientEmail,
+      clientName,
+      serviceConfig?.label || 'אימון אישי',
+      startTime.toISOString(),
+      endTime.toISOString(),
+      finalMeetLink
+    );
+
+    return {
+      eventId: response.data.id,
+      htmlLink: response.data.htmlLink,
+      meetLink: finalMeetLink,
+      startTime: response.data.start?.dateTime,
+      endTime: response.data.end?.dateTime
+    };
   } catch (error) {
     console.error('Error creating booking:', error);
     throw new Error('Failed to create booking');
@@ -537,3 +579,161 @@ function generateMeetCode(): string {
   }
   return result;
 }
+
+async function sendBookingNotificationToTrainer(
+  trainerEmail: string,
+  clientName: string,
+  clientEmail: string,
+  clientPhone: string,
+  serviceLabel: string,
+  startTime: string,
+  endTime: string,
+  notes: string,
+  meetLink: string
+) {
+  try {
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
+    
+    const emailContent = `
+      <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #2563eb;">הזמנה חדשה - לויס פיטנס</h2>
+        
+        <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #1e40af; margin-top: 0;">פרטי השירות</h3>
+          <p><strong>שירות:</strong> ${serviceLabel}</p>
+          <p><strong>תאריך:</strong> ${startDate.toLocaleDateString('he-IL')}</p>
+          <p><strong>שעה:</strong> ${startDate.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })} - ${endDate.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}</p>
+        </div>
+        
+        <div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #0369a1; margin-top: 0;">פרטי הלקוח</h3>
+          <p><strong>שם:</strong> ${clientName}</p>
+          <p><strong>אימייל:</strong> <a href="mailto:${clientEmail}">${clientEmail}</a></p>
+          ${clientPhone ? `<p><strong>טלפון:</strong> <a href="tel:${clientPhone}">${clientPhone}</a></p>` : ''}
+          ${notes ? `<p><strong>הערות:</strong> ${notes}</p>` : ''}
+        </div>
+        
+        <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #92400e; margin-top: 0;">קישור Google Meet</h3>
+          <p><a href="${meetLink}" style="color: #2563eb; text-decoration: none;">${meetLink}</a></p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px;">
+          <p>המייל נשלח אוטומטית ממערכת הזמנות לויס פיטנס</p>
+        </div>
+      </div>
+    `;
+
+                   // Send email using Google Calendar API
+      const event = {
+        summary: `${serviceLabel} - ${clientName}`,
+      description: emailContent,
+      start: {
+        dateTime: new Date().toISOString(),
+        timeZone: process.env.SITE_TIMEZONE || 'Asia/Jerusalem',
+      },
+      end: {
+        dateTime: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 hour later
+        timeZone: process.env.SITE_TIMEZONE || 'Asia/Jerusalem',
+      },
+      attendees: [
+        { email: trainerEmail }
+      ],
+      reminders: {
+        useDefault: false,
+        overrides: [
+          { method: 'email', minutes: 0 } // Send immediately
+        ]
+      }
+    };
+
+         await calendar.events.insert({
+       auth: oauth2Client,
+       calendarId: 'primary', // Use trainer's calendar
+       requestBody: event,
+       sendUpdates: 'all' // Send email to attendees
+     });
+
+         console.log('Booking notification email sent to trainer via Google Calendar');
+         console.log('Trainer email:', trainerEmail);
+         console.log('Event summary:', `${clientName} - ${serviceLabel}`);
+   } catch (error) {
+     console.error('Failed to send booking notification email:', error);
+     // Don't throw error - we don't want to fail the booking if email fails
+   }
+ }
+
+ async function sendBookingConfirmationToClient(
+   clientEmail: string,
+   clientName: string,
+   serviceLabel: string,
+   startTime: string,
+   endTime: string,
+   meetLink: string
+ ) {
+   console.log('[email] Attempting to send confirmation to client:', clientEmail);
+   try {
+     const startDate = new Date(startTime);
+     const endDate = new Date(endTime);
+     
+     const emailContent = `
+       <div dir="rtl" style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+         <h2 style="color: #2563eb;">הזמנה אושרה - לויס פיטנס</h2>
+         
+         <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+           <h3 style="color: #1e40af; margin-top: 0;">פרטי הפגישה</h3>
+           <p><strong>שירות:</strong> ${serviceLabel}</p>
+           <p><strong>תאריך:</strong> ${startDate.toLocaleDateString('he-IL')}</p>
+           <p><strong>שעה:</strong> ${startDate.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })} - ${endDate.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}</p>
+         </div>
+         
+         <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+           <h3 style="color: #92400e; margin-top: 0;">קישור Google Meet</h3>
+           <p><a href="${meetLink}" style="color: #2563eb; text-decoration: none;">${meetLink}</a></p>
+         </div>
+         
+         <div style="text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px;">
+           <p>המייל נשלח אוטומטית ממערכת הזמנות לויס פיטנס</p>
+         </div>
+       </div>
+     `;
+
+     // Send email using Google Calendar API
+     const event = {
+       summary: `לויס פיטנס - ${serviceLabel}`,
+       description: emailContent,
+       start: {
+         dateTime: new Date().toISOString(),
+         timeZone: process.env.SITE_TIMEZONE || 'Asia/Jerusalem',
+       },
+       end: {
+         dateTime: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 hour later
+         timeZone: process.env.SITE_TIMEZONE || 'Asia/Jerusalem',
+       },
+       attendees: [
+         { email: clientEmail }
+       ],
+       reminders: {
+         useDefault: false,
+         overrides: [
+           { method: 'email', minutes: 0 } // Send immediately
+         ]
+       }
+     };
+
+     await calendar.events.insert({
+       auth: oauth2Client,
+       calendarId: 'primary', // Use trainer's calendar
+       requestBody: event,
+       sendUpdates: 'all' // Send email to attendees
+     });
+
+     console.log('Booking confirmation email sent to client via Google Calendar');
+     console.log('Client email:', clientEmail);
+     console.log('Event summary:', `לויס פיטנס - ${serviceLabel}`);
+   } catch (error) {
+     console.error('Failed to send booking confirmation email to client:', error);
+     // Don't throw error - we don't want to fail the booking if email fails
+   }
+ }
